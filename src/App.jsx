@@ -1,3 +1,4 @@
+import './index.css';
 import { useState, useCallback, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, DrawingManager } from '@react-google-maps/api';
 
@@ -14,7 +15,7 @@ export default function App() {
   const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script', 
     googleMapsApiKey: "AIzaSyCxgzdFd26l8CnD7SkHQrHGqdXyYKbX_bY", 
-    version: '3.64', // Pins the map version to keep DrawingManager working
+    version: '3.64',
     libraries 
   });
 
@@ -23,7 +24,6 @@ export default function App() {
     const roundedArea = Math.round(area);
     setRoofArea(roundedArea);
     
-    // Call Backend
     fetch(`${API_BASE}/api/calculate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans p-4 md:p-8">
       <main className="max-w-6xl mx-auto">
-        {/* Header */}
         <header className="mb-8">
           <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
             AquaMetrics AI
@@ -46,7 +45,6 @@ export default function App() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Map Card */}
           <div className="lg:col-span-2 h-[500px] rounded-3xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-900 relative">
             {isLoaded ? (
               <GoogleMap mapContainerStyle={mapContainerStyle} zoom={18} center={{ lat: 13.0827, lng: 80.2707 }} mapTypeId="satellite" onLoad={(map) => { mapRef.current = map; }}>
@@ -61,7 +59,6 @@ export default function App() {
             )}
           </div>
 
-          {/* Right: Dashboard Card */}
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between shadow-xl">
             <div>
               <div className="flex items-center gap-3 mb-6">
