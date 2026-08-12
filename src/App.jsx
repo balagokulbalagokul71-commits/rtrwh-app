@@ -14,6 +14,7 @@ export default function App() {
   const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script', 
     googleMapsApiKey: "AIzaSyCxgzdFd26l8CnD7SkHQrHGqdXyYKbX_bY", 
+    version: '3.64', // Pins the map version to keep DrawingManager working
     libraries 
   });
 
