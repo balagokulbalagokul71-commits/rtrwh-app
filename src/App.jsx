@@ -57,36 +57,40 @@ export default function App() {
       </header>
 
       <div className="grid-layout">
-        {/* Left: Map Card with Search Bar */}
-        <div className="map-card" style={{ position: 'relative' }}>
-          {isLoaded ? (
-            <GoogleMap 
-              mapContainerStyle={mapContainerStyle} 
-              zoom={18} 
-              center={{ lat: 13.0827, lng: 80.2707 }} 
-              mapTypeId="satellite" 
-              onLoad={(map) => { mapRef.current = map; }}
-            >
-              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
-                <input 
-                  type="text" 
-                  placeholder="🔍 Search address or location..." 
-                  className="search-input"
-                />
-              </Autocomplete>
-
-              <DrawingManager 
-                onPolygonComplete={onPolygonComplete} 
-                options={{
-                  drawingControl: true,
-                  drawingControlOptions: { position: 1, drawingModes: ['polygon'] },
-                  polygonOptions: { fillColor: '#3b82f6', fillOpacity: 0.35, strokeColor: '#60a5fa', strokeWeight: 3 }
-                }} 
+        {/* Left Column: Search Bar + Map Card */}
+        <div>
+          <div className="search-wrapper">
+            <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+              <input 
+                type="text" 
+                placeholder="🔍 Search any address or location..." 
+                className="search-input"
               />
-            </GoogleMap>
-          ) : (
-            <div className="loading-map">Loading Map Engine...</div>
-          )}
+            </Autocomplete>
+          </div>
+
+          <div className="map-card">
+            {isLoaded ? (
+              <GoogleMap 
+                mapContainerStyle={mapContainerStyle} 
+                zoom={18} 
+                center={{ lat: 13.0827, lng: 80.2707 }} 
+                mapTypeId="satellite" 
+                onLoad={(map) => { mapRef.current = map; }}
+              >
+                <DrawingManager 
+                  onPolygonComplete={onPolygonComplete} 
+                  options={{
+                    drawingControl: true,
+                    drawingControlOptions: { position: 1, drawingModes: ['polygon'] },
+                    polygonOptions: { fillColor: '#3b82f6', fillOpacity: 0.35, strokeColor: '#60a5fa', strokeWeight: 3 }
+                  }} 
+                />
+              </GoogleMap>
+            ) : (
+              <div className="loading-map">Loading Map Engine...</div>
+            )}
+          </div>
         </div>
 
         {/* Right: Dashboard Card */}
