@@ -1,3 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  margin: 0;
+  background-color: #020617;
+  color: #f8fafc;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  background: linear-gradient(to right, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.header-sub {
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .grid-layout {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.map-card {
+  height: 500px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+  background-color: #0f172a;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-card {
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.metric-box {
+  background-color: #020617;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #1e293b;
+  margin-bottom: 1rem;
+}
+
+.metric-label {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 1.875rem;
+  font-weight: 900;
+  margin-top: 0.25rem;
+}
+
+.yield-box {
+  background: linear-gradient(to bottom right, #2563eb, #4338ca);
+  padding: 1rem;
+  border-radius: 1rem;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(30, 64, 175, 0.5);
+  margin-bottom: 1rem;
+}
+
+.btn-report {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #10b981;
+  color: white;
+  font-weight: bold;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
+}
+
+.btn-report:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.btn-report:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.loading-map {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+}
