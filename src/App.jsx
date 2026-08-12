@@ -71,7 +71,7 @@ export default function App() {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter address or location (e.g., Chennai)..." 
+              placeholder="Enter address or location (e.g., Marina Beach Chennai)..." 
               className="search-input"
             />
             <button onClick={handleSearch} className="btn-search">
