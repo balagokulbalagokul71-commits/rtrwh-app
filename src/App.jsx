@@ -25,7 +25,7 @@ export default function App() {
   };
 
   const onPlaceChanged = () => {
-    if (autocomplete !== null) {
+    if (autocomplete !== null && window.google) {
       const place = autocomplete.getPlace();
       if (place.geometry && place.geometry.location) {
         mapRef.current.panTo(place.geometry.location);
@@ -35,6 +35,7 @@ export default function App() {
   };
 
   const onPolygonComplete = useCallback((polygon) => {
+    if (!window.google || !window.google.maps) return;
     const area = window.google.maps.geometry.spherical.computeArea(polygon.getPath());
     const roundedArea = Math.round(area);
     setRoofArea(roundedArea);
@@ -60,17 +61,26 @@ export default function App() {
         {/* Left Column: Search Bar + Map Card */}
         <div>
           <div className="search-wrapper">
-            <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+            {isLoaded && window.google ? (
+              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+                <input 
+                  type="text" 
+                  placeholder="🔍 Search any address or location..." 
+                  className="search-input"
+                />
+              </Autocomplete>
+            ) : (
               <input 
                 type="text" 
-                placeholder="🔍 Search any address or location..." 
-                className="search-input"
+                placeholder="Loading search..." 
+                className="search-input" 
+                disabled 
               />
-            </Autocomplete>
+            )}
           </div>
 
           <div className="map-card">
-            {isLoaded ? (
+            {isLoaded && window.google ? (
               <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
                 zoom={18} 
