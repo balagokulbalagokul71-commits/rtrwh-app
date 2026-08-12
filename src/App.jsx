@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, DrawingManager } from '@react-google-maps/api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Search, Zap, Download, RefreshCw, Droplets } from 'lucide-react';
+import { Zap, Download, Droplets } from 'lucide-react';
 
 const libraries = ['drawing', 'geometry'];
 const mapContainerStyle = { width: '100%', height: '100%' };
@@ -13,7 +13,11 @@ export default function App() {
   const [isCalculated, setIsCalculated] = useState(false);
   const mapRef = useRef(null);
 
-  const { isLoaded } = useJsApiLoader({ id: 'google-map-script', googleMapsApiKey: "YOUR_API_KEY", libraries });
+  const { isLoaded } = useJsApiLoader({ 
+    id: 'google-map-script', 
+    googleMapsApiKey: "AIzaSyCxgzdFd26l8CnD7SkHQrHGqdXyYKbX_bY", 
+    libraries 
+  });
 
   const onPolygonComplete = useCallback((polygon) => {
     const area = window.google.maps.geometry.spherical.computeArea(polygon.getPath());
