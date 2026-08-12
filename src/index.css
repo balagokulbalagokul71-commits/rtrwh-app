@@ -167,3 +167,25 @@ body {
   height: 100%;
   color: #94a3b8;
 }
+.btn-clear {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.85rem;
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+}
+
+.btn-clear:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.btn-clear:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -11,6 +11,7 @@ export default function App() {
   const [waterSaved, setWaterSaved] = useState(null);
   const [isCalculated, setIsCalculated] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [currentPolygon, setCurrentPolygon] = useState(null);
   const mapRef = useRef(null);
 
   const { isLoaded } = useJsApiLoader({ 
@@ -20,7 +21,6 @@ export default function App() {
     libraries 
   });
 
-  // Free OpenStreetMap Geocoder (No Google Cloud setup or API key needed!)
   const handleSearch = async () => {
     if (!searchText.trim()) return;
     try {
@@ -46,6 +46,13 @@ export default function App() {
 
   const onPolygonComplete = useCallback((polygon) => {
     if (!window.google || !window.google.maps) return;
+
+    // Remove previous polygon from map if it exists
+    setCurrentPolygon(prevPolygon => {
+      if (prevPolygon) prevPolygon.setMap(null);
+      return polygon;
+    });
+
     const area = window.google.maps.geometry.spherical.computeArea(polygon.getPath());
     const roundedArea = Math.round(area);
     setRoofArea(roundedArea);
@@ -59,6 +66,17 @@ export default function App() {
       setIsCalculated(true);
     });
   }, []);
+
+  const handleClearSelection = () => {
+    if (currentPolygon) {
+      currentPolygon.setMap(null);
+      setCurrentPolygon(null);
+    }
+    setRoofArea(0);
+    setWaterSaved(null);
+    setIsCalculated(false);
+    setSearchText('');
+  };
 
   return (
     <div className="app-container">
@@ -131,13 +149,23 @@ export default function App() {
             )}
           </div>
 
-          <button 
-            onClick={() => window.open(`${API_BASE}/api/report?area=${roofArea}`, '_blank')}
-            disabled={roofArea === 0}
-            className="btn-report"
-          >
-            📥 Generate Certified Report
-          </button>
+          <div>
+            <button 
+              onClick={handleClearSelection}
+              disabled={roofArea === 0}
+              className="btn-clear"
+            >
+              🗑️ Clear Selection
+            </button>
+
+            <button 
+              onClick={() => window.open(`${API_BASE}/api/report?area=${roofArea}`, '_blank')}
+              disabled={roofArea === 0}
+              className="btn-report"
+            >
+              📥 Generate Certified Report
+            </button>
+          </div>
         </div>
       </div>
     </div>
