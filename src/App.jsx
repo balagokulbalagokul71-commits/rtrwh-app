@@ -1,8 +1,8 @@
 import './index.css';
 import { useState, useCallback, useRef } from 'react';
-import { GoogleMap, useJsApiLoader, DrawingManager, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, DrawingManager } from '@react-google-maps/api';
 
-const libraries = ['drawing', 'geometry', 'places'];
+const libraries = ['drawing', 'geometry'];
 const mapContainerStyle = { width: '100%', height: '100%' };
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
@@ -10,8 +10,8 @@ export default function App() {
   const [roofArea, setRoofArea] = useState(0);
   const [waterSaved, setWaterSaved] = useState(null);
   const [isCalculated, setIsCalculated] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const mapRef = useRef(null);
-  const [autocomplete, setAutocomplete] = useState(null);
 
   const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script', 
@@ -20,17 +20,22 @@ export default function App() {
     libraries 
   });
 
-  const onLoadAutocomplete = (autoC) => {
-    setAutocomplete(autoC);
+  const handleSearch = () => {
+    if (!window.google || !searchText.trim()) return;
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address: searchText }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        mapRef.current.panTo(results[0].geometry.location);
+        mapRef.current.setZoom(19);
+      } else {
+        alert('Location not found. Please try a more specific address.');
+      }
+    });
   };
 
-  const onPlaceChanged = () => {
-    if (autocomplete !== null && window.google) {
-      const place = autocomplete.getPlace();
-      if (place.geometry && place.geometry.location) {
-        mapRef.current.panTo(place.geometry.location);
-        mapRef.current.setZoom(19);
-      }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -58,25 +63,20 @@ export default function App() {
       </header>
 
       <div className="grid-layout">
-        {/* Left Column: Search Bar + Map Card */}
+        {/* Left Column: Search Bar with Button + Map Card */}
         <div>
-          <div className="search-wrapper">
-            {isLoaded && window.google ? (
-              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
-                <input 
-                  type="text" 
-                  placeholder="🔍 Search any address or location..." 
-                  className="search-input"
-                />
-              </Autocomplete>
-            ) : (
-              <input 
-                type="text" 
-                placeholder="Loading search..." 
-                className="search-input" 
-                disabled 
-              />
-            )}
+          <div className="search-container">
+            <input 
+              type="text" 
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Enter address or location (e.g., Chennai)..." 
+              className="search-input"
+            />
+            <button onClick={handleSearch} className="btn-search">
+              Search
+            </button>
           </div>
 
           <div className="map-card">
