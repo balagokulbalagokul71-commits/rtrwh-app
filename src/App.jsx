@@ -20,17 +20,22 @@ export default function App() {
     libraries 
   });
 
-  const handleSearch = () => {
-    if (!window.google || !searchText.trim()) return;
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: searchText }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        mapRef.current.panTo(results[0].geometry.location);
+  // Free OpenStreetMap Geocoder (No Google Cloud setup or API key needed!)
+  const handleSearch = async () => {
+    if (!searchText.trim()) return;
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchText)}`);
+      const data = await response.json();
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        mapRef.current.panTo({ lat: parseFloat(lat), lng: parseFloat(lon) });
         mapRef.current.setZoom(19);
       } else {
-        alert('Location not found. Please try a more specific address.');
+        alert('Location not found. Try entering a more specific city or landmark.');
       }
-    });
+    } catch (error) {
+      alert('Search failed. Please check your internet connection.');
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -71,7 +76,7 @@ export default function App() {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter address or location (e.g., Marina Beach Chennai)..." 
+              placeholder="Enter address or location (e.g., Chennai)..." 
               className="search-input"
             />
             <button onClick={handleSearch} className="btn-search">
