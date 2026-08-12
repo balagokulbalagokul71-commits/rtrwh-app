@@ -129,3 +129,28 @@ body {
   height: 100%;
   color: #94a3b8;
 }
+.search-input {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+  width: 280px;
+  padding: 0.75rem 1rem;
+  background-color: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #60a5fa;
+}
+
+@media (min-width: 768px) {
+  .search-input {
+    width: 350px;
+  }
+}

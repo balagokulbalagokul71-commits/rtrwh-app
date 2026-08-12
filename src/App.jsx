@@ -1,8 +1,8 @@
 import './index.css';
 import { useState, useCallback, useRef } from 'react';
-import { GoogleMap, useJsApiLoader, DrawingManager } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, DrawingManager, Autocomplete } from '@react-google-maps/api';
 
-const libraries = ['drawing', 'geometry'];
+const libraries = ['drawing', 'geometry', 'places'];
 const mapContainerStyle = { width: '100%', height: '100%' };
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
 
@@ -11,6 +11,7 @@ export default function App() {
   const [waterSaved, setWaterSaved] = useState(null);
   const [isCalculated, setIsCalculated] = useState(false);
   const mapRef = useRef(null);
+  const [autocomplete, setAutocomplete] = useState(null);
 
   const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script', 
@@ -18,6 +19,20 @@ export default function App() {
     version: '3.64',
     libraries 
   });
+
+  const onLoadAutocomplete = (autoC) => {
+    setAutocomplete(autoC);
+  };
+
+  const onPlaceChanged = () => {
+    if (autocomplete !== null) {
+      const place = autocomplete.getPlace();
+      if (place.geometry && place.geometry.location) {
+        mapRef.current.panTo(place.geometry.location);
+        mapRef.current.setZoom(19);
+      }
+    }
+  };
 
   const onPolygonComplete = useCallback((polygon) => {
     const area = window.google.maps.geometry.spherical.computeArea(polygon.getPath());
@@ -42,8 +57,8 @@ export default function App() {
       </header>
 
       <div className="grid-layout">
-        {/* Left: Map Card */}
-        <div className="map-card">
+        {/* Left: Map Card with Search Bar */}
+        <div className="map-card" style={{ position: 'relative' }}>
           {isLoaded ? (
             <GoogleMap 
               mapContainerStyle={mapContainerStyle} 
@@ -52,6 +67,14 @@ export default function App() {
               mapTypeId="satellite" 
               onLoad={(map) => { mapRef.current = map; }}
             >
+              <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
+                <input 
+                  type="text" 
+                  placeholder="🔍 Search address or location..." 
+                  className="search-input"
+                />
+              </Autocomplete>
+
               <DrawingManager 
                 onPolygonComplete={onPolygonComplete} 
                 options={{
